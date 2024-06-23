@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTableWidget" name="tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>300</y>
+      <width>511</width>
+      <height>241</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>201</y>
+      <width>551</width>
+      <height>51</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>130</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>automatic</string>
+    </property>
+   </widget>
+   <widget class="QListView" name="listView">
+    <property name="geometry">
+     <rect>
+      <x>595</x>
+      <y>290</y>
+      <width>171</width>
+      <height>251</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>200</y>
+      <width>51</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&gt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>42</x>
+      <y>200</y>
+      <width>51</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;</string>
+    </property>
+   </widget>
+   <widget class="QScrollBar" name="horizontalScrollBar">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>250</y>
+      <width>551</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>30</y>
+      <width>83</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Пуск</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>30</y>
+      <width>83</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Стоп</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_5">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>30</y>
+      <width>83</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Пауза</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_6">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>10</y>
+      <width>83</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Сохранение</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_7">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>10</y>
+      <width>83</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Открыть прогу</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
