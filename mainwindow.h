@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPixmap>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -13,7 +14,13 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+
+    void start();
+
     ~MainWindow();
+
+private slots:
+    void on_MainWindow_iconSizeChanged(const QSize &iconSize);
 
 private:
     Ui::MainWindow *ui;
