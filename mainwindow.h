@@ -5,6 +5,8 @@
 #include <QPixmap>
 #include <QTextEdit>
 #include <QMessageBox>
+#include <QList>
+#include <QStringList>
 
 #include <memory>
 
@@ -19,7 +21,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(int displaySizeX, int displaySizeY, QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
 
     void start();
 
@@ -31,9 +33,15 @@ private slots:
 
     void on_AddAlphabetButton_clicked();
 
+    void on_AddStatesButton_clicked();
+
+    void on_CreateTableButton_clicked();
+
 private:
     Ui::MainWindow *ui;
-    int displaySizeX_;
-    int displaySizeY_;
+
+    QStringList alp_;
+
+    int numOfStates_;
 };
 #endif // MAINWINDOW_H

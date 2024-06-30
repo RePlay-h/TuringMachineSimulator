@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QSize screenSize = a.primaryScreen()->size();
-    MainWindow w(screenSize.width(), screenSize.height());
+    MainWindow w;
 
     // calculate screen center
     int centerX = (screenSize.width()-w.size().width())/2;
