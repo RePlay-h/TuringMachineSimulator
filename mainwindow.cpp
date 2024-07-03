@@ -13,21 +13,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pointer->setPixmap(pix);
 }
 
-void MainWindow::start() {
-
-}
-
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
-void MainWindow::on_MainWindow_iconSizeChanged(const QSize &iconSize)
-{
-
-}
-
 
 
 void MainWindow::on_AddAlphabetButton_clicked()
@@ -77,19 +66,47 @@ void MainWindow::on_CreateTableButton_clicked()
         QMessageBox::warning(nullptr, "Ooops...", "Please enter alphabet or number of states");
     }
     else {
-        ui->tableWidget->setColumnCount(numOfStates_);
-        ui->tableWidget->setRowCount(alp_.size());
+        numOfStates_++;
+        alp_.push_front(" ");
 
+        // set table size
+
+        ui->tableWidget->setColumnCount(alp_.size());
+        ui->tableWidget->setRowCount(numOfStates_);
+
+        // create a special QStringList in which the states will be stored: q0, q1, q2, ...
         QStringList strStates;
 
         for(int i = 0; i < numOfStates_; ++i) {
             strStates.append("q" + QString::number(i));
         }
 
-        ui->tableWidget->setVerticalHeaderLabels(alp_);
-        ui->tableWidget->setHorizontalHeaderLabels(strStates);
+        // set header labels
+        ui->tableWidget->setVerticalHeaderLabels(strStates);
+        ui->tableWidget->setHorizontalHeaderLabels(alp_);
         ui->tableWidget->show();
+
+        table_.resize(numOfStates_);
+
+        for(int i = 0; i < numOfStates_; ++i) {
+            table_[i].resize(alp_.size());
+        }
+
         qDebug() << "TABLE CREATE"; // TODO
+    }
+}
+
+void MainWindow::on_tableWidget_cellChanged(int row, int column)
+{
+    QStringList cell = ui->tableWidget->item(row, column)->text().split("/");
+
+    if(!alp_.contains(cell[0]) || cell.size() > 3 || cell.size() < 3 || cell[2].toInt() > numOfStates_ || cell[2].toInt() < 0) {
+        QMessageBox::warning(nullptr, "Ooops...", "Enter the string correctly");
+        ui->tableWidget->removeCellWidget(row, column);
+    }
+    else {
+        table_[row][column] = std::move(cell);
+        qDebug() << "TABLE IS UPDATED";
     }
 }
 

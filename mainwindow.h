@@ -1,14 +1,16 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+
 #include <QMainWindow>
 #include <QPixmap>
 #include <QTextEdit>
 #include <QMessageBox>
 #include <QList>
 #include <QStringList>
+#include <QVector>
 
-#include <memory>
+#include <algorithm>
 
 #include <myutility.h>
 
@@ -23,13 +25,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
 
-    void start();
-
     ~MainWindow();
 
 private slots:
-    void on_MainWindow_iconSizeChanged(const QSize &iconSize);
-
 
     void on_AddAlphabetButton_clicked();
 
@@ -37,11 +35,15 @@ private slots:
 
     void on_CreateTableButton_clicked();
 
+    void on_tableWidget_cellChanged(int row, int column);
+
 private:
     Ui::MainWindow *ui;
 
     QStringList alp_;
 
     int numOfStates_;
+
+    QVector<QVector<QStringList>> table_;
 };
 #endif // MAINWINDOW_H
