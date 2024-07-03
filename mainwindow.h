@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#define LENOFCOMMANDLINE 1000
 
 #include <QMainWindow>
 #include <QPixmap>
@@ -9,6 +10,7 @@
 #include <QList>
 #include <QStringList>
 #include <QVector>
+#include <QListWidget>
 
 #include <algorithm>
 
@@ -36,6 +38,12 @@ private slots:
     void on_CreateTableButton_clicked();
 
     void on_tableWidget_cellChanged(int row, int column);
+
+    void on_ToCenterButton_clicked();
+
+    void on_CommandLine_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_EnterWordLine_returnPressed();
 
 private:
     Ui::MainWindow *ui;

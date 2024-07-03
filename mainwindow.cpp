@@ -8,9 +8,22 @@ MainWindow::MainWindow(QWidget *parent)
     , numOfStates_{0}
 {
     ui->setupUi(this);
+
+
     QPixmap pix{":img/img/pointer.png"}; // set arrow image
     pix = pix.scaled(50, 50, Qt::KeepAspectRatio);
     ui->pointer->setPixmap(pix);
+
+
+    for(int i = -LENOFCOMMANDLINE; i < LENOFCOMMANDLINE+1; ++i) {
+        ui->CommandLine->addItem(" \n\n       " + QString::number(i));
+        ui->CommandLine->item(i+LENOFCOMMANDLINE)->setSizeHint({50, 50});
+    }
+    ui->CommandLine->scrollToItem(ui->CommandLine->item(LENOFCOMMANDLINE-8));
+    ui->CommandLine->show();
+
+
+    ui->EnterWordLine->setReadOnly(true);
 }
 
 MainWindow::~MainWindow()
@@ -106,7 +119,38 @@ void MainWindow::on_tableWidget_cellChanged(int row, int column)
     }
     else {
         table_[row][column] = std::move(cell);
-        qDebug() << "TABLE IS UPDATED";
+        qDebug() << "TABLE IS UPDATED"; //TODO
     }
+}
+
+
+void MainWindow::on_ToCenterButton_clicked()
+{
+    ui->CommandLine->scrollToItem(ui->CommandLine->item(0));
+    ui->CommandLine->scrollToItem(ui->CommandLine->item(LENOFCOMMANDLINE+7));
+}
+
+
+void MainWindow::on_CommandLine_itemDoubleClicked(QListWidgetItem *item)
+{
+    ui->EnterWordLine->setReadOnly(false);
+
+    ui->EnterWordLine->setFocus();
+}
+
+
+void MainWindow::on_EnterWordLine_returnPressed()
+{
+    QString word = ui->EnterWordLine->text();
+
+    if(!alp_.contains(word)) {
+        QMessageBox::warning(nullptr, "Ooops...", "Enter a word that is in the alphabet");
+    }
+    else {
+        ui->CommandLine->currentItem()->setText(word);
+    }
+    ui->EnterWordLine->clear();
+    ui->EnterWordLine->setReadOnly(true);
+
 }
 
