@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , alp_{}
     , numOfStates_{0}
+    , mch_{}
+    , table_{}
 {
     ui->setupUi(this);
 
@@ -14,12 +16,14 @@ MainWindow::MainWindow(QWidget *parent)
     pix = pix.scaled(50, 50, Qt::KeepAspectRatio);
     ui->pointer->setPixmap(pix);
 
-
+    //  Customize the Ribbon
     for(int i = -LENOFCOMMANDLINE; i < LENOFCOMMANDLINE+1; ++i) {
-        ui->CommandLine->addItem(" \n\n       " + QString::number(i));
+        ui->CommandLine->addItem("  "); // add item number
         ui->CommandLine->item(i+LENOFCOMMANDLINE)->setSizeHint({50, 50});
     }
-    ui->CommandLine->scrollToItem(ui->CommandLine->item(LENOFCOMMANDLINE-8));
+    ui->CommandLine->scrollToItem(ui->CommandLine->item(LENOFCOMMANDLINE-8)); // move on to the central element of the Ribbon
+    ui->CommandLine->setCurrentItem(ui->CommandLine->item(LENOFCOMMANDLINE));
+    qDebug() << ui->CommandLine->currentIndex().column() << ui->CommandLine->currentIndex().column();
     ui->CommandLine->show();
 
 
@@ -102,9 +106,9 @@ void MainWindow::on_CreateTableButton_clicked()
         table_.resize(numOfStates_);
 
         for(int i = 0; i < numOfStates_; ++i) {
-            table_[i].resize(alp_.size());
+            table_[i] = QVector<Сonfiguration>(alp_.size(), Сonfiguration(0,0,' '));
         }
-
+        ui->CreateTableButton->setEnabled(false);
         qDebug() << "TABLE CREATE"; // TODO
     }
 }
@@ -118,12 +122,28 @@ void MainWindow::on_tableWidget_cellChanged(int row, int column)
         ui->tableWidget->removeCellWidget(row, column);
     }
     else {
-        table_[row][column] = std::move(cell);
+        table_[row][column].state = cell[2].toInt();
+
+        if (cell[1] == "L") {
+            table_[row][column].mv = -1;
+        }
+        if (cell[1] == "N") {
+            table_[row][column].mv = 0;
+        }
+        if (cell[1] == "R") {
+            table_[row][column].mv = 1;
+        }
+
+        table_[row][column].word = cell[0][0];
+
+
+
         qDebug() << "TABLE IS UPDATED"; //TODO
     }
 }
 
 
+// go to element number 0
 void MainWindow::on_ToCenterButton_clicked()
 {
     ui->CommandLine->scrollToItem(ui->CommandLine->item(0));
@@ -131,26 +151,93 @@ void MainWindow::on_ToCenterButton_clicked()
 }
 
 
+//
 void MainWindow::on_CommandLine_itemDoubleClicked(QListWidgetItem *item)
 {
+    //make the line below the ribbon possible for text entry
     ui->EnterWordLine->setReadOnly(false);
-
+    // activate the line under the ribbon
     ui->EnterWordLine->setFocus();
 }
 
 
 void MainWindow::on_EnterWordLine_returnPressed()
 {
+    // get word from line
     QString word = ui->EnterWordLine->text();
 
     if(!alp_.contains(word)) {
         QMessageBox::warning(nullptr, "Ooops...", "Enter a word that is in the alphabet");
     }
     else {
-        ui->CommandLine->currentItem()->setText(word);
+        ui->CommandLine->currentItem()->setText(" " + word);
     }
     ui->EnterWordLine->clear();
     ui->EnterWordLine->setReadOnly(true);
 
 }
 
+void MainWindow::MoveTo(int step) {
+    QListWidgetItem *item = ui->CommandLine->currentItem();
+
+    int st = ui->CommandLine->currentIndex().row() + step;
+    qDebug() << "STEP IS: " << st;
+    ui->CommandLine->scrollToItem(ui->CommandLine->item(st));
+    ui->CommandLine->setCurrentItem(ui->CommandLine->item(st));
+}
+
+void MainWindow::ChangeItem(QChar word) {
+    qDebug() << "SET TEXT" << word;
+    ui->CommandLine->currentItem()->setText(" " + QString(word));
+}
+void MainWindow::on_RunButton_clicked()
+{
+    qDebug() << "RunButton clicked";
+    ui->tableWidget->setEnabled(false);
+    ui->RunButton->setEnabled(false);
+    ui->alphabet->setEnabled(false);
+    ui->numOfStates->setEnabled(false);
+    ui->AddAlphabetButton->setEnabled(false);
+    ui->AddStatesButton->setEnabled(false);
+    ui->CreateTableButton->setEnabled(false);
+    ui->ToCenterButton->setEnabled(false);
+    ui->EnterWordLine->setEnabled(false);
+
+    connect(&mch_, &Machine::MoveTo, this, &MainWindow::MoveTo);
+    connect(&mch_, &Machine::ChangeItem, this, &MainWindow::ChangeItem);
+    connect(this, &MainWindow::GetWord, &mch_, &Machine::GetWord);
+    connect(&mch_, &Machine::StopCircle, this, &MainWindow::StopCircle);
+
+    ui->CommandLine->setCurrentItem(ui->CommandLine->item(1000));
+
+    mch_.ResetMachine();
+    mch_.Init(&table_, &alp_);
+
+    StartCircle();
+}
+
+void MainWindow::StartCircle() {
+    while(!isStopCircle) {
+        qDebug() << "TEXT SIZE: " << ui->CommandLine->currentItem()->text().size();
+        mch_.GetWord(ui->CommandLine->currentItem()->text()[1]);
+        std::this_thread::sleep_for(std::chrono::milliseconds(400));
+    }
+    isStopCircle = false;
+}
+
+
+void MainWindow::StopCircle() {
+    ui->tableWidget->setEnabled(true);
+    ui->RunButton->setEnabled(true);
+    ui->alphabet->setEnabled(true);
+    ui->numOfStates->setEnabled(true);
+    ui->AddAlphabetButton->setEnabled(true);
+    ui->AddStatesButton->setEnabled(true);
+    ui->CreateTableButton->setEnabled(true);
+    ui->ToCenterButton->setEnabled(true);
+    ui->EnterWordLine->setEnabled(true);
+
+    ui->CommandLine->setCurrentItem(ui->CommandLine->item(1000));
+
+    isStopCircle = true;
+}

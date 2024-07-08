@@ -18,8 +18,8 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
-        myutility.cpp
-        myutility.h
+        machine.cpp
+        machine.h
         mainwindow.ui
         source.qrc
 )

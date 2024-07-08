@@ -3,18 +3,21 @@
 
 #define LENOFCOMMANDLINE 1000
 
+
 #include <QMainWindow>
 #include <QPixmap>
 #include <QTextEdit>
 #include <QMessageBox>
 #include <QList>
-#include <QStringList>
-#include <QVector>
 #include <QListWidget>
+#include <QTime>
 
 #include <algorithm>
+#include <chrono>
+#include <thread>
 
-#include <myutility.h>
+
+#include "machine.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,6 +31,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
 
     ~MainWindow();
+
+    void StartCircle();
+
+signals:
+    void GetWord(QChar word);
+
 
 private slots:
 
@@ -45,6 +54,13 @@ private slots:
 
     void on_EnterWordLine_returnPressed();
 
+    void on_RunButton_clicked();
+
+    void MoveTo(int step);
+
+    void ChangeItem(QChar word);
+
+    void StopCircle();
 private:
     Ui::MainWindow *ui;
 
@@ -52,6 +68,10 @@ private:
 
     int numOfStates_;
 
-    QVector<QVector<QStringList>> table_;
+    Machine mch_;
+
+    QVector<QVector<Сonfiguration>> table_;
+
+    bool isStopCircle;
 };
 #endif // MAINWINDOW_H
