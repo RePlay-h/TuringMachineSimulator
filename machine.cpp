@@ -21,7 +21,7 @@ void Machine::GetWord(QChar word) {
     Сonfiguration &conf = (*table_)[state_][alp_->indexOf(word_)];
 
     qDebug() << '[' << conf.word << conf.mv << conf.state << ']';
-    qDebug() << table_->size();
+
     if(conf.word == word_ && conf.state == state_ && conf.mv == 0) {
         emit StopCircle();
     }

@@ -23,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     }
     ui->CommandLine->scrollToItem(ui->CommandLine->item(LENOFCOMMANDLINE-8)); // move on to the central element of the Ribbon
     ui->CommandLine->setCurrentItem(ui->CommandLine->item(LENOFCOMMANDLINE));
-    qDebug() << ui->CommandLine->currentIndex().column() << ui->CommandLine->currentIndex().column();
     ui->CommandLine->show();
 
 
@@ -122,6 +121,8 @@ void MainWindow::on_tableWidget_cellChanged(int row, int column)
         ui->tableWidget->removeCellWidget(row, column);
     }
     else {
+
+        // save table data
         table_[row][column].state = cell[2].toInt();
 
         if (cell[1] == "L") {
@@ -176,23 +177,28 @@ void MainWindow::on_EnterWordLine_returnPressed()
     ui->EnterWordLine->setReadOnly(true);
 
 }
-
+// A slot that calls Machine when you need to move to another cell
 void MainWindow::MoveTo(int step) {
     QListWidgetItem *item = ui->CommandLine->currentItem();
 
-    int st = ui->CommandLine->currentIndex().row() + step;
+    int st = ui->CommandLine->currentIndex().row() + step; // calculate a new cell
     qDebug() << "STEP IS: " << st;
     ui->CommandLine->scrollToItem(ui->CommandLine->item(st));
     ui->CommandLine->setCurrentItem(ui->CommandLine->item(st));
 }
 
+// A slot that places a new word in the current cell
 void MainWindow::ChangeItem(QChar word) {
     qDebug() << "SET TEXT" << word;
     ui->CommandLine->currentItem()->setText(" " + QString(word));
 }
+
+// Initial settings of the main window
 void MainWindow::on_RunButton_clicked()
 {
     qDebug() << "RunButton clicked";
+
+    // disable all buttons on the main window while the program is running
     ui->tableWidget->setEnabled(false);
     ui->RunButton->setEnabled(false);
     ui->alphabet->setEnabled(false);
@@ -203,6 +209,7 @@ void MainWindow::on_RunButton_clicked()
     ui->ToCenterButton->setEnabled(false);
     ui->EnterWordLine->setEnabled(false);
 
+
     connect(&mch_, &Machine::MoveTo, this, &MainWindow::MoveTo);
     connect(&mch_, &Machine::ChangeItem, this, &MainWindow::ChangeItem);
     connect(this, &MainWindow::GetWord, &mch_, &Machine::GetWord);
@@ -210,7 +217,7 @@ void MainWindow::on_RunButton_clicked()
 
     ui->CommandLine->setCurrentItem(ui->CommandLine->item(1000));
 
-    mch_.ResetMachine();
+    mch_.ResetMachine(); // Reset word and machine status
     mch_.Init(&table_, &alp_);
 
     StartCircle();
@@ -225,7 +232,7 @@ void MainWindow::StartCircle() {
     isStopCircle = false;
 }
 
-
+// A slot that stops the machine
 void MainWindow::StopCircle() {
     ui->tableWidget->setEnabled(true);
     ui->RunButton->setEnabled(true);
