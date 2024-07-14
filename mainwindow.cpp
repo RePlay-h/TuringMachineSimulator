@@ -183,8 +183,10 @@ void MainWindow::MoveTo(int step) {
 
     int st = ui->CommandLine->currentIndex().row() + step; // calculate a new cell
     qDebug() << "STEP IS: " << st;
-    ui->CommandLine->scrollToItem(ui->CommandLine->item(st));
     ui->CommandLine->setCurrentItem(ui->CommandLine->item(st));
+    ui->CommandLine->scrollToItem(ui->CommandLine->item(st));
+
+    ui->CommandLine->show();
 }
 
 // A slot that places a new word in the current cell
@@ -216,6 +218,8 @@ void MainWindow::on_RunButton_clicked()
     connect(&mch_, &Machine::StopCircle, this, &MainWindow::StopCircle);
 
     ui->CommandLine->setCurrentItem(ui->CommandLine->item(1000));
+    on_ToCenterButton_clicked();
+    ui->CommandLine->show();
 
     mch_.ResetMachine(); // Reset word and machine status
     mch_.Init(&table_, &alp_);
@@ -245,6 +249,13 @@ void MainWindow::StopCircle() {
     ui->EnterWordLine->setEnabled(true);
 
     ui->CommandLine->setCurrentItem(ui->CommandLine->item(1000));
+    on_ToCenterButton_clicked();
+    ui->CommandLine->show();
+
+    disconnect(&mch_, &Machine::MoveTo, this, &MainWindow::MoveTo);
+    disconnect(&mch_, &Machine::ChangeItem, this, &MainWindow::ChangeItem);
+    disconnect(this, &MainWindow::GetWord, &mch_, &Machine::GetWord);
+    disconnect(&mch_, &Machine::StopCircle, this, &MainWindow::StopCircle);
 
     isStopCircle = true;
 }
